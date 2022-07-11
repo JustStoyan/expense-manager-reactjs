@@ -1,8 +1,27 @@
+import { getAuth } from 'firebase/auth'
+import { useEffect, useState } from 'react';
+import { app } from '../utils/firebase'
+import GuestView from './GuestView';
+import LoggedView from './LoggedView';
+
+
 const Home = props => {
 
-    return <div>
-        <h1>This is the home page</h1>
-    </div>
+    const auth = getAuth(app);
+    const [isLogged, setIsLogged] = useState(auth.currentUser);
+
+
+    useEffect(() => {
+        let doesExist = auth.currentUser;
+        setIsLogged(() => doesExist ? auth.currentUser.accessToken : null);
+        console.log(auth.currentUser);
+    }, [isLogged, auth])
+
+    return <>
+
+        {isLogged ? <LoggedView /> : <GuestView />}
+
+    </>
 }
 
 export default Home;
